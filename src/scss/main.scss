@@ -1,0 +1,14 @@
+$primary-color1: #ffa200;
+$primary-color2: #6eda78;
+
+.mainbody {
+  height: 80vh;
+  .box {
+    width: 350px;
+    user-select: none;
+    &:hover {
+      border: 2px solid #000000;
+      cursor: pointer;
+    }
+  }
+}
