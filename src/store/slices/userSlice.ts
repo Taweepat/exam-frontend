@@ -1,39 +1,49 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
 
-export type UserState = {
+export interface IUserState {
+  id: number;
   noun: "นาย" | "นาง" | "นางสาว" | "เด็กชาย" | "เด็กหญิง" | undefined;
   firstName: string;
   lastName: string;
   birthDate: Date;
-  Nation: string;
-  cardNo: string;
+  nation: string;
+  cardId: string;
   gender: string;
   tel: string;
   travelBookNo: string;
   salary: string;
-};
+}
 
-const initialValue: UserState = {
-  noun: undefined,
-  firstName: "",
-  lastName: "",
-  birthDate: new Date(),
-  Nation: "",
-  cardNo: "",
-  gender: "",
-  tel: "",
-  travelBookNo: "",
-  salary: "",
-};
+const initialState: IUserState[] = [];
 
-const createUserSlice = createSlice({
-  name: "create",
-  initialState: {},
-  reducers: {},
-  extraReducers(builder) {},
+function getUsersFromLocalStorage(): IUserState[] {
+  const users = localStorage.getItem("users");
+  return users ? JSON.parse(users) : initialState;
+}
+
+export const userSlice = createSlice({
+  name: "user",
+  initialState: getUsersFromLocalStorage(),
+  reducers: {
+    addUser(state, action) {
+      const nextId = state.length > 0 ? state[state.length - 1].id + 1 : 1;
+
+      const newUser = {
+        id: nextId,
+        ...action.payload,
+      };
+
+      state.push(newUser);
+
+      localStorage.setItem("users", JSON.stringify(state));
+    },
+    clearUser: () => {
+      localStorage.removeItem("user");
+      return initialState;
+    },
+  },
 });
 
-export const {} = createUserSlice.actions;
-export const createUser = (store: RootState) => store.userReducer;
-export default createUserSlice.reducer;
+export const { addUser, clearUser } = userSlice.actions;
+
+export default userSlice.reducer;
