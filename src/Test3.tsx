@@ -123,6 +123,7 @@ const Test3 = (props: Props) => {
     register,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<IUserState>({
     resolver: zodResolver(dataSchema),
@@ -153,7 +154,7 @@ const Test3 = (props: Props) => {
     },
     {
       title: "Action",
-      key: "id",
+      key: "noun",
       fixed: "right",
       render: (e) => (
         <Flex gap="middle">
@@ -171,12 +172,13 @@ const Test3 = (props: Props) => {
   const onSubmit: SubmitHandler<IUserState> = (data) => {
     console.log(data);
     dispatch(addUser(data));
+
+    reset();
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
-    
   };
 
   const rowSelection = {
@@ -332,6 +334,7 @@ const Test3 = (props: Props) => {
             dataSource={users}
             pagination={{ pageSize: 50 }}
             scroll={{ y: 240 }}
+            rowKey={(record) => record.id}
           />
         </Col>
       </Row>

@@ -37,6 +37,9 @@ export const userSlice = createSlice({
 
       localStorage.setItem("users", JSON.stringify(state));
     },
+    deleteUser: (state, action) => {
+
+    },
     clearUser: () => {
       localStorage.removeItem("user");
       return initialState;
@@ -44,6 +47,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { addUser, clearUser } = userSlice.actions;
+export const { addUser, clearUser,deleteUser } = userSlice.actions;
 
 export default userSlice.reducer;
