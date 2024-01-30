@@ -43,6 +43,14 @@ export const userSlice = createSlice({
       state.splice(0, state.length, ...updatedUsers);
       localStorage.setItem("users", JSON.stringify(state));
     },
+    editUser: (state, action) => {
+      const editedUser = action.payload;
+      const index = state.findIndex((user) => user.id === editedUser.id);
+      if (index !== -1) {
+        state[index] = { ...state[index], ...editedUser };
+        localStorage.setItem("users", JSON.stringify(state));
+      }
+    },
     clearUser: () => {
       localStorage.removeItem("user");
       return initialState;
@@ -50,6 +58,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { addUser, clearUser, deleteUser } = userSlice.actions;
+export const { addUser, clearUser, deleteUser, editUser } = userSlice.actions;
 
 export default userSlice.reducer;

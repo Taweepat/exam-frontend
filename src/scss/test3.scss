@@ -1,8 +1,12 @@
-
 .formData {
   border: 1px solid;
   background: transparent;
   border-radius: 8px;
   width: 900px;
   padding: 1rem;
+}
+
+.error-message {
+  font-size: 12px;
+  color: red;
 }

@@ -1,44 +1,37 @@
-import React, { useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import React from "react";
 import {
-  IUserState,
-  addUser,
-  deleteUser,
-  editUser,
-} from "./store/slices/userSlice";
-import "./scss/test3.scss";
-import {
-  Button,
-  Checkbox,
-  Col,
-  DatePicker,
-  Flex,
+  Modal,
   Form,
+  Button,
   Input,
-  Radio,
+  Col,
   Row,
   Select,
-  Table,
-  TableColumnsType,
+  DatePicker,
+  Flex,
+  Radio,
 } from "antd";
+import { Controller, useForm } from "react-hook-form";
+import { IUserState } from "../store/slices/userSlice";
 import { Option } from "antd/es/mentions";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./store/store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useTranslation } from "react-i18next";
-import EditModal from "./components/EditModal";
 
-type Props = {};
+interface EditModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onSubmit: (data: IUserState) => void;
+  defaultValues?: IUserState;
+}
 
-const Test3 = (props: Props) => {
-  const users = useSelector((store: RootState) => store.userReducer);
-  const dispatch = useDispatch();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [isSelectAll, setIsSelectAll] = useState(false);
+const EditModal: React.FC<EditModalProps> = ({
+  visible,
+  onClose,
+  onSubmit,
+  defaultValues,
+}) => {
   const { t, i18n } = useTranslation();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editData, setEditData] = useState<IUserState | null>(null);
 
   const dataSchema = z
     .object({
@@ -139,93 +132,45 @@ const Test3 = (props: Props) => {
     reset,
     formState: { errors },
   } = useForm<IUserState>({
+    defaultValues,
     resolver: zodResolver(dataSchema),
   });
 
-  const onDelete = (userId: number) => {
-    dispatch(deleteUser(userId));
-  };
-
-  const columns: TableColumnsType<IUserState> = [
-    {
-      title: `${t("FormFirstName")}`,
-      dataIndex: "noun",
-      render: (text, record) =>
-        record.noun + " " + record.firstName + " " + record.lastName,
-      sorter: true,
-    },
-    {
-      title: `${t("FormGender")}`,
-      dataIndex: "gender",
-      sorter: true,
-    },
-    {
-      title: `${t("FormTel")}`,
-      dataIndex: "tel",
-      sorter: true,
-    },
-    {
-      title: `${t("FormNation")}`,
-      dataIndex: "nation",
-      sorter: true,
-    },
-    {
-      title: `${t("TableAction")}`,
-      fixed: "right",
-      render: (record) => (
-        <Flex gap="middle">
-          <Button onClick={() => handleOpenModal(record)}>Edit</Button>
-          <Button onClick={() => onDelete(record.id)}>
-            {t("BtnDeleteForm")}
-          </Button>
-        </Flex>
-      ),
-    },
-  ];
-
-  const onSubmit: SubmitHandler<IUserState> = (data) => {
-    console.log(data);
-    dispatch(addUser(data));
+  const handleCloseModal = () => {
+    onClose();
     reset();
   };
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-    setIsSelectAll(newSelectedRowKeys.length === users.length);
-  };
-
-  const onSelectDelete = () => {
-    selectedRowKeys.map((v) => dispatch(deleteUser(v)));
-  };
-
-  const onSelectAllChange = (e: { target: { checked: boolean } }) => {
-    const checked = e.target.checked;
-    setIsSelectAll(checked);
-    const newSelectedRowKeys = checked ? users.map((user) => user.id) : [];
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
-  const handleOpenModal = (record: IUserState) => {
-    console.log("Preview : ", record);
-    setEditData(record);
-    setIsModalVisible(true);
-    console.log("Preview state : ", editData);
-  };
-
-  const handleCloseModal = () => {
-    setEditData(null);
-    setIsModalVisible(false);
-  };
-
   return (
-    <div>
+    <Modal
+      width="auto"
+      title="Edit User"
+      visible={visible}
+      onCancel={handleCloseModal}
+      footer={[
+        <Button key="cancel" onClick={onClose}>
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          onClick={(data) => {
+            handleSubmit(onSubmit)(data);
+            reset(); 
+          }}
+        >
+          Save
+        </Button>,
+      ]}
+    >
       <Flex justify="center">
-        <Form layout="horizontal" onFinish={handleSubmit(onSubmit)}>
+        <Form
+          layout="horizontal"
+          onFinish={(data) => {
+            handleSubmit(onSubmit)(data);
+            reset(); 
+          }}
+        >
           <div className="formData">
             <Row gutter={16}>
               <Col span={6}>
@@ -385,53 +330,12 @@ const Test3 = (props: Props) => {
                   )}
                 </Form.Item>
               </Col>
-              <Col span={7}>
-                <Form.Item>
-                  <Button htmlType="submit">{t("BtnClearForm")}</Button>
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item>
-                  <Button htmlType="submit">{t("BtnSendForm")}</Button>
-                </Form.Item>
-              </Col>
             </Row>
           </div>
         </Form>
       </Flex>
-      <Row gutter={16} style={{ marginTop: "1rem" }}>
-        <Col span={25} style={{ padding: "0 10rem", margin: "1rem 0" }}>
-          <Checkbox checked={isSelectAll} onChange={onSelectAllChange}>
-            {t("BtnSelectForm")}
-          </Checkbox>
-          <Button onClick={() => onSelectDelete()}>{t("BtnDeleteForm")}</Button>
-        </Col>
-        <Col span={25} style={{ padding: "0 10rem" }}>
-          <Table
-            rowSelection={rowSelection}
-            columns={columns}
-            dataSource={users}
-            pagination={{ pageSize: 10 }}
-            scroll={{ y: 340 }}
-            rowKey={(record) => record.id}
-          />
-        </Col>
-      </Row>
-      <EditModal
-        visible={isModalVisible}
-        onClose={() => {
-          handleCloseModal();
-        }}
-        onSubmit={(data) => {
-          console.log(data);
-          const result = { ...data, id: editData?.id };
-          dispatch(editUser(result));
-          handleCloseModal();
-        }}
-        defaultValues={editData || undefined}
-      />
-    </div>
+    </Modal>
   );
 };
 
-export default Test3;
+export default EditModal;
