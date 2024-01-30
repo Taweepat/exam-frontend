@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { IUserState, addUser } from "./store/slices/userSlice";
+import { IUserState, addUser, deleteUser } from "./store/slices/userSlice";
 import "./scss/test3.scss";
 import {
   Button,
@@ -129,6 +129,10 @@ const Test3 = (props: Props) => {
     resolver: zodResolver(dataSchema),
   });
 
+  const onDelete = (userId: number) => {
+    dispatch(deleteUser(userId));
+  };
+
   const columns: TableColumnsType<IUserState> = [
     {
       title: "ชื่อ",
@@ -156,9 +160,9 @@ const Test3 = (props: Props) => {
       title: "Action",
       key: "noun",
       fixed: "right",
-      render: (e) => (
+      render: (record) => (
         <Flex gap="middle">
-          <Button>Delete</Button>
+          <Button onClick={() => onDelete(record.id)}>Delete</Button>
           <Button>Edit</Button>
         </Flex>
       ),
