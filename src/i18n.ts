@@ -4,6 +4,8 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   th: {
     translation: {
+      "ChangePosition" : "เปลี่ยนตำแหน่ง",
+      "SlideShape" : "เลื่อนรูปแบบ",
       "LanguageChangeTH": "ไทย",
       "LanguageChangeEN": "อังกฤษ",
       "Test1Title":"ทดสอบ 1",
@@ -36,6 +38,8 @@ const resources = {
   },
   en: {
     translation: {
+      "ChangePosition" : "Change Position",
+      "SlideShape" : "เลื่อนรูปแบบ",
       "LanguageChangeTH": "Thai",
       "LanguageChangeEN": "English",
       "Test1Title":"Test 1",

@@ -1,0 +1,102 @@
+@mixin shapes($width, $height) {
+  width: $width;
+  height: $height;
+  background-color: rgb(141, 141, 141);
+  display: inline-block;
+  &:hover,
+  .box-shapes:hover & {
+    background-color: #FFFFFF;
+  }
+}
+@mixin triangle($width, $height) {
+  width: $width;
+  height: $height;
+  background-color: rgb(141, 141, 141);
+  display: inline-block;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%, 50% 0%);
+}
+
+.box-shapes {
+  min-width: 25% !important;
+  height: 150px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: aliceblue;
+  position: relative;
+  &:hover {
+    cursor: pointer;
+    background-color: #ffa40c;
+  }
+}
+.box-des {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.2rem 1rem;
+  border-radius: 10px;
+  background-color: #6dd978;
+  color: #ffffff;
+  position: absolute;
+  bottom: -12px;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.shape1 {
+  @include shapes(100px, 100px);
+}
+
+.shape2 {
+  @include shapes(200px, 80px);
+  border-radius: 50%;
+}
+
+.shape3 {
+  @include shapes(200px, 100px);
+  clip-path: polygon(80% 0%, 100% 100%, 0% 100%, 20% 0%);
+}
+
+.shape4 {
+  @include shapes(100px, 100px);
+  border-radius: 50%;
+}
+
+.shape5 {
+  @include shapes(220px, 100px);
+  clip-path: polygon(85% 0%, 100% 100%, 15% 100%, 0% 0%);
+}
+
+.shape6 {
+  @include shapes(200px, 100px);
+}
+
+.arrow-up {
+  @include triangle(100px, 100px);
+  transform: rotate(0deg);
+}
+.arrow-down {
+  @include triangle(100px, 100px);
+  transform: rotate(180deg);
+}
+.arrow-left {
+  @include triangle(100px, 100px);
+  transform: rotate(270deg);
+}
+.arrow-right {
+  @include triangle(100px, 100px);
+  transform: rotate(90deg);
+}
+
+.box-preview {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}

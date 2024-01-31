@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface IUserState {
+  localeCompare(b: IUserState): number;
   id: number;
   noun: "นาย" | "นาง" | "นางสาว" | "เด็กชาย" | "เด็กหญิง" | undefined;
   firstName: string;

@@ -152,22 +152,32 @@ const Test3 = (props: Props) => {
       dataIndex: "noun",
       render: (text, record) =>
         record.noun + " " + record.firstName + " " + record.lastName,
-      sorter: true,
+      sorter: (a, b) => {
+        const typeA = a.noun + " " + a.firstName + " " + a.lastName;
+        const typeB = b.noun + " " + b.firstName + " " + b.lastName;
+        return typeA.localeCompare(typeB);
+      },
     },
     {
       title: `${t("FormGender")}`,
       dataIndex: "gender",
-      sorter: true,
+      sorter: (a, b) => {
+        return a.gender.localeCompare(b.gender);
+      },
     },
     {
       title: `${t("FormTel")}`,
       dataIndex: "tel",
-      sorter: true,
+      sorter: (a, b) => {
+        return a.tel.localeCompare(b.tel);
+      },
     },
     {
       title: `${t("FormNation")}`,
       dataIndex: "nation",
-      sorter: true,
+      sorter: (a, b) => {
+        return a.nation.localeCompare(b.nation);
+      },
     },
     {
       title: `${t("TableAction")}`,
@@ -411,7 +421,7 @@ const Test3 = (props: Props) => {
             rowSelection={rowSelection}
             columns={columns}
             dataSource={users}
-            pagination={{ pageSize: 10 }}
+            pagination={{ pageSize: 5 }}
             scroll={{ y: 340 }}
             rowKey={(record) => record.id}
           />
